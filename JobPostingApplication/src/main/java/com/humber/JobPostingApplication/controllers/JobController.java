@@ -33,7 +33,7 @@ public class JobController {
     //Home page
     @GetMapping("/home")
     public String Home(Model model) {
-        model.addAttribute("rName", postingName);
+        model.addAttribute("pName", postingName);
         return "home";
     }
 
