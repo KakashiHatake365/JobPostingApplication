@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Listings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<main>
+    <header th:include="@{/fragments/header.html}"></header>
+    <div class="content">
+        <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+        <h1>Job Listings</h1>
+
+        <!-- Filter Form -->
+        <form th:action="@{/jobmasters/jobs}" method="get">
+            <input type="text" name="searchedTitle" placeholder="Job Title">
+            <input type="text" name="searchedLocation" placeholder="Location">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a class="btn btn-secondary" th:href="@{/jobmasters/jobs}">Reset</a>
+            <a class="btn btn-warning" th:href="@{/jobmasters/jobs/add}">Add New Job</a>
+        </form>
+
+        <!-- Job Listings Table -->
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <a th:href="@{'/jobmasters/jobs' + ${currentPage} + '?sortField=id&sortDirection=' + ${reverseSortDirection} }">ID</a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{'/jobmasters/jobs' + ${currentPage} + '?sortField=title&sortDirection=' + ${reverseSortDirection} }">Job Title</a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{'/jobmasters/jobs' + ${currentPage} + '?sortField=location&sortDirection=' + ${reverseSortDirection} }">Location</a>
+                </th>
+                <th scope="col">
+                    <a th:href="@{'/jobmasters/jobs' + ${currentPage} + '?sortField=company&sortDirection=' + ${reverseSortDirection} }">Company</a>
+                </th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="job : ${jobs}">
+                <td th:text="${job.id}"></td>
+                <td th:text="${job.title}"></td>
+                <td th:text="${job.location}"></td>
+                <td th:text="${job.company}"></td>
+                <td>
+                    <a th:href="@{/jobmasters/jobs/view/{id} (id=${job.id})}" class="btn btn-info btn-sm">View</a>
+                    <a th:href="@{/jobmasters/jobs/update/{id} (id=${job.id})}" class="btn btn-warning btn-sm">Update</a>
+                    <a th:href="@{/jobmasters/jobs/delete/{id} (id=${job.id})}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" th:if="${totalPages}">
+        <div class="pagination-info">
+            <div>Total jobs: <span th:text="${totalItems}"></span></div>
+            <div>Current page: <span th:text="${currentPage}"></span></div>
+            <div>Total Pages: <span th:text="${totalPages}"></span></div>
+        </div>
+        <div class="pagination-no">
+            <div th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:href="@{'/jobmasters/jobs/' + ${i} + '?sortField=' + ${sortField} + '&sortDirection=' + ${sortDirection} }" th:text="${i}"></a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:include="@{/fragments/footer.html}"></footer>
+</main>
+</body>
+</html>
