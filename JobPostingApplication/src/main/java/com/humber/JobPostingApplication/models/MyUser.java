@@ -22,6 +22,4 @@ public class MyUser {
     private String password;
     @Column(nullable = false)
     private String role;
-    @Column(nullable = false)
-    private String employer;
 }
