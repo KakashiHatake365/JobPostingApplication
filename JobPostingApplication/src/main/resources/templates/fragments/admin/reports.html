@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Reports</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f4f7fc; }
+        .card { margin-top: 20px; }
+        .filter-container { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">JobMasters Admin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/jobmasters/admin/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/jobmasters/admin/manage-users">Manage Users</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/jobmasters/admin/reports">Reports</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="mt-4">System Reports</h1>
+
+    <!-- Filters Section -->
+    <div class="filter-container">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="report-time-range" class="form-label">Select Time Range:</label>
+                <select id="report-time-range" class="form-select">
+                    <option value="all">All Time</option>
+                    <option value="last-month">Last Month</option>
+                    <option value="last-week">Last Week</option>
+                    <option value="last-year">Last Year</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="report-category" class="form-label">Select Category:</label>
+                <select id="report-category" class="form-select">
+                    <option value="users">Users</option>
+                    <option value="applications">Applications</option>
+                    <option value="jobs">Jobs</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary mt-4" id="filter-btn">Generate Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="card">
+        <div class="card-header">Report Overview</div>
+        <div class="card-body">
+            <canvas id="reportChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="card mt-4">
+        <div class="card-header">Detailed Data</div>
+        <div class="card-body">
+            <table class="table table-bordered" id="report-table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Count</th>
+                    <th>Category</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Dynamic rows will be inserted here via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initialize chart.js
+    const ctx = document.getElementById('reportChart').getContext('2d');
+    const reportChart = new Chart(ctx, {
+        type: 'line', // Choose chart type
+        data: {
+            labels: [], // This will hold the dates or time periods
+            datasets: [{
+                label: 'Report Data',
+                data: [], // This will hold the dynamic report data
+                borderColor: 'rgb(75, 192, 192)',
+                fill: false,
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Handle the filter button click to update both the chart and table
+    document.getElementById('filter-btn').addEventListener('click', function () {
+        const timeRange = document.getElementById('report-time-range').value;
+        const category = document.getElementById('report-category').value;
+
+        // Fetch data based on selected filters (for demonstration, using static data)
+        // In real-world use, you would fetch this data from your server
+        const reportData = generateReportData(timeRange, category);
+
+        // Update the chart with new data
+        reportChart.data.labels = reportData.labels;
+        reportChart.data.datasets[0].data = reportData.values;
+        reportChart.update();
+
+        // Update the table with new data
+        const tableBody = document.getElementById('report-table').getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = ''; // Clear existing rows
+        reportData.labels.forEach((label, index) => {
+            const row = tableBody.insertRow();
+            row.innerHTML = `<td>${label}</td><td>${reportData.values[index]}</td><td>${category}</td>`;
+        });
+    });
+
+    // Mock function to simulate dynamic report data based on the filter
+    function generateReportData(timeRange, category) {
+        const data = {
+            "users": { "all": { "labels": ["January", "February", "March"], "values": [20, 45, 30] },
+                "last-month": { "labels": ["November", "December"], "values": [15, 25] },
+                "last-week": { "labels": ["Dec 1", "Dec 2"], "values": [5, 10] },
+                "last-year": { "labels": ["2023", "2024"], "values": [100, 120] } },
+            "applications": { "all": { "labels": ["January", "February", "March"], "values": [50, 100, 150] },
+                "last-month": { "labels": ["November", "December"], "values": [60, 80] },
+                "last-week": { "labels": ["Dec 1", "Dec 2"], "values": [15, 20] },
+                "last-year": { "labels": ["2023", "2024"], "values": [600, 700] } },
+            "jobs": { "all": { "labels": ["January", "February", "March"], "values": [10, 20, 30] },
+                "last-month": { "labels": ["November", "December"], "values": [5, 10] },
+                "last-week": { "labels": ["Dec 1", "Dec 2"], "values": [1, 3] },
+                "last-year": { "labels": ["2023", "2024"], "values": [60, 70] } }
+        };
+
+        return data[category][timeRange];
+    }
+</script>
+</body>
+</html>

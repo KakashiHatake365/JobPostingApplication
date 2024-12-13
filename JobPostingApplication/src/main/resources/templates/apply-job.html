@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Job</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Apply for Job: ${job.title}</h1>
+    <p><strong>Location:</strong> ${job.location}</p>
+    <p><strong>Salary:</strong> ${job.salary}</p>
+    <p><strong>Description:</strong> ${job.description}</p>
+
+    <form th:action="@{/jobmasters/apply/{jobId} (jobId=${job.id})}" method="POST">
+        <div class="form-group">
+            <label for="applicantName">Full Name</label>
+            <input type="text" id="applicantName" name="applicantName" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="applicantEmail">Email</label>
+            <input type="email" id="applicantEmail" name="applicantEmail" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="applicantResume">Resume</label>
+            <input type="file" id="applicantResume" name="applicantResume" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+    </form>
+
+    <a th:href="@{/jobmasters/jobs/1}" class="btn btn-secondary mt-3">Back to Jobs List</a>
+</div>
+</body>
+</html>

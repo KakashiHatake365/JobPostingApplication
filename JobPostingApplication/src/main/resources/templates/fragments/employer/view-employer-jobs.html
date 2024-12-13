@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Your Jobs</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Your Job Postings</h2>
+    <div th:if="${message}" class="alert alert-info mt-3" th:text="${message}"></div>
+    <table class="table table-hover mt-4">
+        <thead class="table-dark">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Salary</th>
+            <th>Applicants</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="job : ${jobs}">
+            <td th:text="${job.title}"></td>
+            <td th:text="${job.description}"></td>
+            <td th:text="${job.salary}"></td>
+<!--            <td th:text="${job.applicants.size()}">0</td> &lt;!&ndash; Displays the number of applicants &ndash;&gt;-->
+            <td>
+                <a th:href="@{/jobmasters/employers/view-applications/{id}(id=${job.id})}" class="btn btn-info btn-sm">View Applications</a>
+                <a th:href="@{/jobmasters/employers/update/{id}(id=${job.id})}" class="btn btn-warning btn-sm">Edit</a>
+                <a th:href="@{/jobmasters/employers/delete/{id}(id=${job.id})}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        <tr th:each="application : ${applications}">
+            <td th:text="${application.applicants.size()}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

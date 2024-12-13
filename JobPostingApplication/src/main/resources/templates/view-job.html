@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Jobs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+    <div class="alert alert-success" th:if="${message}" th:text="${message}"></div>
+    <h1>View Job</h1>
+    <div class="content">
+        <div class="container">
+            <h2>Job Details</h2>
+            <div class="card" th:each="job : ${jobs}">
+                <div class="card-header">
+                    <h3>Job Title: <span th:text="${job.title}"></span></h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Description:</strong> <span th:text="${job.description}"></span></p>
+                    <p><strong>Requirements:</strong> <span th:text="${job.requirements}"></span></p>
+                    <p><strong>Location:</strong> <span th:text="${job.location}"></span></p>
+                    <p><strong>Salary:</strong> <span th:text="${job.salary}"></span></p>
+                    <p><strong>Employer:</strong> <span th:text="${job.employer}"></span></p>
+                </div>
+                <div class="card-footer">
+                    <a th:href="@{/jobmasters/apply/{id} (id=${job.id})}" class="btn btn-info btn-sm">Apply</a>
+                    <a th:href="@{/jobmasters/jobs/1}" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
