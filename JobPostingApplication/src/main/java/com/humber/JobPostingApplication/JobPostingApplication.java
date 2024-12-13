@@ -13,7 +13,7 @@ public class JobPostingApplication implements CommandLineRunner {
 		SpringApplication.run(JobPostingApplication.class, args);
 	}
 
-	private JobService jobService;
+	private final JobService jobService;
 
 	public JobPostingApplication(JobService jobService) {
 		this.jobService = jobService;
